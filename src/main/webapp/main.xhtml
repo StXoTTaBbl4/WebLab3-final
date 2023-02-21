@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core"
+      xmlns:a="jakarta.faces.passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+    <f:facet name="first">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </f:facet>
+
+    <h:outputStylesheet library="css" name="w3.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" type="javascript"></script>
+    <script type="text/javascript" src="resources/js/main.js"></script>
+    <link rel="icon" href="#{resource['pictures/rapture-00.png']}"/>
+    <ui:insert name="head">
+        <title>Лабораторная работа #3</title>
+    </ui:insert>
+</h:head>
+<h:body>
+
+    <header class="w3-container w3-teal">
+      <span class="w3-show-inline-block">
+        <h:link styleClass="w3-image" outcome="goToWelcome">
+            <h:graphicImage value="/resources/pictures/rapture-01.png" height="60"/>
+        </h:link>
+      </span>
+        <span class="w3-show-inline-block">
+          Лабораторная работа #3, Вариант #121013, Румский А.М. Р32121
+      </span>
+    </header>
+
+    <main class="w3-container w3-center" style="padding: 0;">
+        <div class="w3-container" style="background-color: #6CB8A0; "><h1 >Лабораторная работа №3 - Основная страница</h1></div>
+
+        <div class="w3-container w3-third" style="margin-top: 10px">
+            <canvas id="canvas" width="300px" height="300px" style="border:1px solid #000000;"></canvas><br/>
+            <h:link outcome="goToWelcome">
+                На начальную страницу
+            </h:link>
+        </div>
+
+        <div class="w3-third">
+            <p id="info">Введите координаты точки</p>
+            <section >
+                <h:form>
+                    <div class="w3-container">
+                        <h:outputLabel for="x-value" value="X"/><br/>
+                        <h:inputText  id="x-value"
+                                      maxlength="4" autocomplete="off" a:placeholder="Число от -3 до 3..."
+                                      value="#{entriesBean.entry.xValue}" styleClass="x-val">
+                            <f:validateRequired/>
+                            <f:validateDoubleRange minimum="-3" maximum="3"/>
+                        </h:inputText>
+                    </div>
+
+                    <div class="w3-container" style="margin-top: 25px">
+                    <h:outputLabel for="y-value" value="Y"/>
+                    <h:selectOneRadio id="y-value" value="#{entriesBean.entry.yValue}" styleClass="radioY">
+                        <f:selectItem itemValue='-3' itemLabel="-3"/>
+                        <f:selectItem itemValue='-2' itemLabel="-2"/>
+                        <f:selectItem itemValue='-1' itemLabel="-1"/>
+                        <f:selectItem itemValue='0' itemLabel="0" />
+                        <f:selectItem itemValue='1' itemLabel="1" />
+                        <f:selectItem itemValue='2' itemLabel="2" />
+                        <f:selectItem itemValue='3' itemLabel="3" />
+                        <f:selectItem itemValue='4' itemLabel="4" />
+                        <f:selectItem itemValue='5' itemLabel="5" />
+                    </h:selectOneRadio>
+                    </div>
+
+                    <div class="w3-container" style="margin-top: 25px">
+                    <p:growl id="growl" showDetail="true"/>
+                    <h:outputLabel styleClass="r-val" for="r-value"  value="R"/><br/>
+                        <p:inputNumber widgetVar="r-val" styleClass="r-val" id="r-value" value="#{entriesBean.entry.rValue}"
+                                       valueChangeListener="#{entriesBean.onInputChanged}" maxValue="5.0" minValue="2.0">
+                            <p:ajax process="@this" update="growl"/>
+                        </p:inputNumber>
+                        <p:slider for="r-value" minValue="2.0" maxValue="5.0" step="0.1" range="min"/>
+                    </div>
+
+                    <br/>
+                    <h:commandButton styleClass="sendButton" id="sendButton"
+                                     value="Отправить" action="#{entriesBean.addEntry}" >
+                        <f:ajax execute="@form" render="results"/>
+                    </h:commandButton>
+                    <h:commandButton  id="sendResetButton"
+                                     value="Очистить" action="#{entriesBean.clearEntries()}" >
+                        <f:ajax execute="@form" render="results"/>
+                    </h:commandButton>
+
+                </h:form>
+            </section>
+        </div>
+
+        <div id="res" class="w3-third">
+            <h:dataTable id="results"  value="#{entriesBean.entries}" var="entry">
+                <h:column>
+                    <f:facet name="header">X</f:facet>
+                    <h:outputText value="#{entry.xValue}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Y</f:facet>
+                    <h:outputText value="#{entry.yValue}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">R</f:facet>
+                    <h:outputText value="#{entry.rValue}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Result</f:facet>
+                    <h:outputText value="#{entry.hitResult}"/>
+                </h:column>
+            </h:dataTable>
+        </div>
+    </main>
+    <link rel="stylesheet" href="resources/css/style.css"/>
+
+    <footer class="w3-bottom w3-center w3-teal">
+        <h3>All rights not reserved</h3>
+    </footer>
+</h:body>
+</html>
